@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>᥆ᥴᥱᥲᥒ ᑲᥱᥲᥴһ 𝗍ᥱᥲᥖ | Official</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root { --neon: #00d2ff; --neon-glow: rgba(0, 210, 255, 0.6); --bg-dark: #050505; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: var(--bg-dark); 
+            color: white; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            min-height: 100vh; 
+            padding: 30px 0; 
+            overflow-x: hidden; 
+            overflow-y: auto; 
+        }
+
+        /* STAR ANIMATION BACKGROUND */
+        #star-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: fall linear infinite; }
+        .star.blue { background: var(--neon); box-shadow: 0 0 10px var(--neon); }
+        
+        @keyframes fall {
+            from { transform: translateY(-10vh) translateX(0); opacity: 1; }
+            to { transform: translateY(110vh) translateX(20px); opacity: 0; }
+        }
+
+        .bg-lights { position: fixed; inset: 0; z-index: -2; }
+        .light { position: absolute; width: 300px; height: 300px; background: var(--neon); filter: blur(120px); border-radius: 50%; opacity: 0.1; }
+        .l1 { top: -50px; left: -50px; }
+        .l2 { bottom: -50px; right: -50px; }
+
+        /* LOADER */
+        #loader { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; transition: 0.8s ease; }
+        .loader-logo { width: 110px; height: 110px; border: 3px solid var(--neon); border-radius: 50%; margin-bottom: 25px; box-shadow: 0 0 30px var(--neon-glow); background: url('obt.png') center/cover; animation: slideDown 1s ease-out forwards; opacity: 0; z-index: 10001; }
+        .loader-text { font-size: 1.1rem; font-weight: bold; text-shadow: 0 0 10px var(--neon); animation: slideUp 1s ease-out 0.2s forwards; opacity: 0; z-index: 10001; }
+        @keyframes slideDown { from { transform: translateY(-80px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(80px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* UI COMPONENTS */
+        .container { text-align: center; width: 92%; max-width: 400px; padding: 30px 15px; border-radius: 35px; background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.6); margin-bottom: 50px; position: relative; }
+        .profile-img { width: 130px; height: 130px; border-radius: 50%; margin-bottom: 15px; border: 3px solid var(--neon); padding: 4px; box-shadow: 0 0 25px var(--neon-glow); animation: float 3s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .tab-nav { display: grid; grid-template-columns: 1fr 1fr 1fr; background: rgba(255, 255, 255, 0.05); border-radius: 15px; margin-bottom: 20px; padding: 5px; gap: 5px; }
+        .tab-btn { background: transparent; color: #777; border: none; padding: 12px 0; border-radius: 10px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon-glow); }
+
+        .tab-content { display: none; width: 100%; text-align: left; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .item-row { background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.05); text-decoration: none; color: white; transition: 0.3s; }
+        .item-row:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.1); }
+        
+        .scroll-area { max-height: 350px; overflow-y: auto; padding-right: 5px; }
+        .scroll-area::-webkit-scrollbar { width: 3px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--neon); border-radius: 10px; }
+
+        .desc-box { background: rgba(0, 210, 255, 0.03); border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid rgba(0, 210, 255, 0.1); }
+        .img-preview-slot { width: 100%; height: 130px; border: 2px dashed rgba(0, 210, 255, 0.3); border-radius: 15px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px; cursor: pointer; background-size: cover; background-position: center; }
+        .btn-main { width: 100%; padding: 16px; border-radius: 15px; border: none; background: var(--neon); color: #000; font-weight: bold; cursor: pointer; }
+
+        #music-btn { position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px; background: rgba(0,0,0,0.8); border: 1px solid var(--neon); border-radius: 50%; display: none; justify-content: center; align-items: center; z-index: 5000; color: var(--neon); }
+        #rules-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.96); display: none; justify-content: center; align-items: center; z-index: 20000; padding: 20px; }
+        .modal-content { background: #0a0a0a; width: 100%; max-width: 350px; padding: 25px; border-radius: 30px; border: 1px solid var(--neon); }
+    </style>
+</head>
+<body onclick="startMusic()">
+
+    <div id="star-container"></div>
+    <div class="bg-lights"><div class="light l1"></div><div class="light l2"></div></div>
+    <audio id="myAudio" loop><source src="OwO.mp3" type="audio/mpeg"></audio>
+
+    <div id="loader">
+        <div class="loader-logo"></div>
+        <div class="loader-text">ᥕᥱᥣᥴ᥆ᥖᥱ 𝗍᥆ ᥆ᥴᥱᥲᥒ ᑲᥱᥲᥴһ!!</div>
+    </div>
+
+    <div id="music-btn" onclick="toggleMusic(event)"><i id="music-icon" class="fas fa-compact-disc"></i></div>
+
+    <div id="rules-modal">
+        <div class="modal-content">
+            <h3 style="color:var(--neon); text-align:center; margin-bottom:15px;">᥉ᥱᑲᥱᥣᥙᥖ ᥖᥲ᥉ᥙk rᥙᥣᥱ᥉!</h3>
+            <div style="font-size:0.8rem; line-height:1.8; margin-bottom:20px;">
+                ➤ ᥲ𝗍𝗍і𝗍ᥙძᥱ ᥒᥙmᑲᥱr ➜ 1<br>
+                ➤ ᥒ᥆ 18+ / 21+ (ᑲᥲᥒ / kіᥴk)<br>
+                ➤ ᥒ᥆ rᥙsᥙһ / s⍴ᥲm ᥴһᥲ𝗍/ᥴᥲᥣᥣ<br>
+                ➤ 𝗍᥆᥊іᥴ sᥱᥕᥲȷᥲrᥒᥡᥲ (ȷᥲᥒgᥲᥒ rᥲᥴі᥉𝗍)<br>
+                ➤ ძ᥆ᥒ'𝗍 ᥴᥙrі mᥱm / ᥴ᥆m⍴᥆ (һᥲrᥲ⍴ і᥺іᥒ)<br>
+                ➤ kіrіm 𝖿𝗍᥆/᥎іძ 1x ᥣіᥲ𝗍 (һᥲᥒᥡᥲ 1᥊)<br>
+                ➤ һ᥆rᥖᥲ𝗍і ᥉ᥱ᥉ᥲᥖᥲ mᥱmᑲᥱr ᥆ᑲ𝗍
+            </div>
+            <button class="btn-main" onclick="goToGC()">᥉ᥲᥡᥲ ᥖᥱᥒgᥱr𝗍𝗂</button>
+        </div>
+    </div>
+
+    <div class="container" id="main" style="display:none;">
+        <img src="obt.png" class="profile-img">
+        <h2 style="margin-bottom:20px;">᥆ᥴᥱᥲᥒ ᑲᥱᥲᥴһ 𝗍ᥱᥲᥖ</h2>
+
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab(event, 'links')">ᥣіᥒks</button>
+            <button class="tab-btn" onclick="switchTab(event, 'team')">𝗍ᥱᥲm</button>
+            <button class="tab-btn" onclick="switchTab(event, 'report')">rᥱ⍴᥆r𝗍</button>
+        </div>
+
+        <div id="links" class="tab-content active">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <a href="https://www.tiktok.com/@oceanbeachteam" target="_blank" class="item-row" style="justify-content:center; flex-direction:column; height:85px; margin-bottom:0;">
+                    <i class="fab fa-tiktok" style="color:var(--neon); font-size:1.3rem;"></i>
+                    <span style="font-size:0.75rem; margin-top:5px;">𝗍𝗂𝗄𝗍᥆𝗄</span>
+                </a>
+                <div onclick="showRules()" class="item-row" style="cursor:pointer; justify-content:center; flex-direction:column; height:85px; margin-bottom:0;">
+                    <i class="fab fa-whatsapp" style="color:var(--neon); font-size:1.3rem;"></i>
+                    <span style="font-size:0.75rem; margin-top:5px;">gᥴ ᥆ᥴᥱᥲᥒ</span>
+                </div>
+                <a href="https://whatsapp.com/channel/0029Vb6nSaiDZ4Lisirpol46" target="_blank" class="item-row" style="justify-content:center; flex-direction:column; height:85px; margin-bottom:0;">
+                    <i class="fas fa-bullhorn" style="color:var(--neon); font-size:1.3rem;"></i>
+                    <span style="font-size:0.75rem; margin-top:5px;">ᥴһᥲᥒᥱᥣ</span>
+                </a>
+                <a href="https://www.roblox.com/groups/33261274/OCEAN-BEACH-TEAM" target="_blank" class="item-row" style="justify-content:center; flex-direction:column; height:85px; margin-bottom:0;">
+                    <i class="fas fa-gamepad" style="color:var(--neon); font-size:1.3rem;"></i>
+                    <span style="font-size:0.75rem; margin-top:5px;">𝗋᥆ᑲᥣ᥆᥊</span>
+                </a>
+            </div>
+
+            <div class="desc-box">
+                <p><b>᥎ᥱr᥉і᥆ᥒ ᑲᥱ𝗍ᥲ:</b> 13.2026.24 | <b>ᥕᥱᑲ:</b> 1.5</p>
+                <p><b>ᥴrᥱძі𝗍᥉:</b> mᥲᥣіk</p>
+                <hr style="margin:10px 0; opacity:0.1;">
+                <p style="font-size: 0.8rem; line-height: 1.6; color: #ccc;">ᥕᥱᑲ іᥒі ძіᑲіkіᥒ kһᥙ᥉ᥙ᥉ ᑲᥙᥲ𝗍 mᥱmᑲᥱr ᥆ᥴᥱᥲᥒ ᑲᥱᥲᥴһ 𝗍ᥱᥲm. ȷᥲᥒgᥲᥒ ᥣᥙ⍴ᥲ sᥱᥣᥲᥣᥙ һ᥆r mᥲ𝗍і rᥙᥣᥱs ᥡᥲᥒg ᥲძᥲ ძᥲᥒ kᥲᥣᥲᥙ ᥲძᥲ ᑲᥙg ᥲ𝗍ᥲᥙ mᥲsᥲᥣᥲһ sᥱ⍴ᥱr𝗍і ᥆rᥲᥒg rᥲᥴіs𝗍 ᥣᥲᥒgsᥙᥒg ᥣᥲ⍴᥆r ძі 𝗍ᥲᑲ rᥱ⍴᥆r𝗍. mᥲkᥲsіһ ძᥲһ mᥲm⍴іr! 😜🤟</p>
+            </div>
+        </div>
+
+        <div id="team" class="tab-content">
+            <div class="scroll-area">
+                <div class="item-row"><span>+ᥲsᥡᥲr᥆ᥒ</span><span style="color:var(--neon); font-weight:bold;">Owner</span></div>
+                <div class="item-row"><span>+ᥡ᥆rᥲ</span><span style="color:var(--neon); font-weight:bold;">Co-Owner</span></div>
+                <div class="item-row"><span>+ᥲძᥲ⍴ᥲ</span><span style="color: #888;">Admin</span></div>
+                <div class="item-row"><span>+ᥴᥱᥣіᥒᥱ</span><span style="color: #888;">Admin</span></div>
+                <div class="item-row"><span>mᥲᥡᥲ</span><span style="color: #888;">Admin</span></div>
+                <div class="item-row"><span>mіzᥴᥲ</span><span style="color: #888;">Admin</span></div>
+                <div class="item-row"><span>+ᥲkᥲᥒzһᥲ</span><span style="color:var(--neon); opacity:0.7;">Guard</span></div>
+                <div class="item-row"><span>ᥲzᥴᥲ</span><span style="color:var(--neon); opacity:0.7;">Guard</span></div>
+                <div class="item-row"><span>ᥲr𝗍һᥙr</span><span style="color:var(--neon); opacity:0.7;">Guard</span></div>
+                <div class="item-row"><span>mᥱі𝗍ᥲ</span><span style="color:var(--neon); opacity:0.7;">Guard</span></div>
+                <div class="item-row"><span>rᥡᥙmᥲ</span><span style="color:var(--neon); opacity:0.7;">Editor</span></div>
+                <div class="item-row"><span>һᥲrᥙkᥲ</span><span style="color:var(--neon); opacity:0.7;">Editor</span></div>
+            </div>
+        </div>
+
+        <div id="report" class="tab-content">
+            <p style="color:var(--neon); font-size:0.9rem; margin-bottom:15px; font-weight:bold;">ᥣᥲ⍴᥆r mᥲ᥉ᥲᥣᥲһ kᥱ mᥲᥣіk:</p>
+            <select id="rep-cat" style="width:100%; padding:12px; background:#111; border:1px solid #333; color:white; border-radius:12px; margin-bottom:15px; outline:none;">
+                <option value="Bug Website">ᑲᥙg ᥕᥱᑲ᥉і𝗍ᥱ</option>
+                <option value="Member Racist">᥆rᥲᥒg rᥲᥴі᥉𝗍 / 𝗍᥆᥊іᥴ</option>
+                <option value="Lainnya">ᥣᥲіᥒᥒᥡᥲ</option>
+            </select>
+            <input type="file" id="f-report" hidden onchange="previewImg(this)">
+            <label for="f-report" id="img-label" class="img-preview-slot"><i class="fas fa-camera"></i>&nbsp; ᥙ⍴ᥣ᥆ᥲძ ᑲᥙk𝗍і</label>
+            <textarea id="rep-text" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid #333; border-radius:15px; padding:15px; color:white; font-size:0.85rem; outline:none;" rows="4" placeholder="ȷᥱᥣᥲ᥉kᥲᥒ ძᥱ𝗍ᥲіᥣ mᥲ᥉ᥲᥣᥲһᥒᥡᥲ..."></textarea>
+            <button class="btn-main" style="margin-top:15px;" onclick="sendWA()">kіrіm ᥣᥲ⍴᥆rᥲᥒ</button>
+        </div>
+    </div>
+
+    <script>
+        // --- STAR GENERATOR ---
+        function createStars() {
+            const container = document.getElementById('star-container');
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement('div');
+                const isBlue = Math.random() > 0.5;
+                star.className = isBlue ? 'star blue' : 'star';
+                const size = Math.random() * 3 + 1 + 'px';
+                star.style.width = size;
+                star.style.height = size;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDuration = Math.random() * 3 + 2 + 's';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(star);
+            }
+        }
+        createStars();
+
+        const audio = document.getElementById('myAudio');
+        let musicStarted = false;
+        function startMusic() { if(!musicStarted) { audio.play().catch(() => {}); musicStarted = true; document.getElementById('music-icon').classList.add('fa-spin'); } }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('main').style.display = 'block'; document.getElementById('music-btn').style.display = 'flex'; }, 800);
+            }, 3000);
+        });
+
+        function toggleMusic(e) { e.stopPropagation(); const icon = document.getElementById('music-icon'); if (audio.paused) { audio.play(); icon.classList.add('fa-spin'); } else { audio.pause(); icon.classList.remove('fa-spin'); } }
+        function switchTab(e, name) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(name).classList.add('active'); e.currentTarget.classList.add('active'); }
+        function showRules() { document.getElementById('rules-modal').style.display = 'flex'; }
+        function goToGC() { window.open("https://chat.whatsapp.com/FwfwbM0eTjq4tN8LbKj5OL", "_blank"); document.getElementById('rules-modal').style.display = 'none'; }
+
+        function previewImg(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => { document.getElementById('img-label').style.backgroundImage = `url(${e.target.result})`; document.getElementById('img-label').innerHTML = ''; };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function sendWA() {
+            const cat = document.getElementById('rep-cat').value;
+            const msg = document.getElementById('rep-text').value;
+            const hasImg = document.getElementById('f-report').files.length > 0;
+            if(!msg) return alert("і᥉і ძᥱ𝗍ᥲіᥣ mᥲ᥉ᥲᥣᥲһ ძᥙᥣᥙ!");
+            const detail = `*— ᥣᥲ⍴᥆rᥲᥒ mᥲ᥉ᥲᥣᥲһ —*%0A%0A*Kategori:* ${cat}%0A*Detail:* ${msg}%0A${hasImg ? '%0A_(Bukti foto sudah dilampirkan)_' : ''}`;
+            window.open(`https://wa.me/601125412122?text=${detail}`, '_blank');
+        }
+    </script>
+</body>
+</html>
